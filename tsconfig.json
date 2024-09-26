@@ -5,7 +5,6 @@
 		"lib": ["ESNext", "DOM"],
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
-		"preserveConstEnums": false,
 		"outDir": "./dist",
 	}
 }
