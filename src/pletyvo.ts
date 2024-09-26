@@ -29,11 +29,11 @@ export class Pletyvo {
 		const network = this.network()
 		network && headers.set('Network', network)
 
-		const response = await fetch(new URL(endpoint, this.urlBase() + '?' + new URLSearchParams(query as any)), {
+		const response = await fetch( String(this.urlBase() ?? '').replace(/\/$/, '') + endpoint + '?' + new URLSearchParams(query as any), {
 			method,
 			body: body === undefined ? undefined : JSON.stringify(body),
 			headers,
-		})
+		} )
 
 		if (response.status !== 200) {
 			throw new Error(`${response.status} ${response.statusText}: ${await response.text()}`)
