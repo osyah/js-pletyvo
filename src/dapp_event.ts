@@ -18,7 +18,7 @@ export class DappEvent<data = unknown> {
 		e.id = raw.id
 		e.author = raw.author
 		e.auth = raw.auth
-		e.body = BytesFromString(raw.body)
+		e.body = BytesFromString( atob( raw.body ) )
 		return e
 	}
 
@@ -41,7 +41,7 @@ export class DappEvent<data = unknown> {
 	}
 
 	data() {
-		return JSON.parse( atob( BytesToString( this.body.slice(5) ) ) ) as data
+		return JSON.parse( BytesToString( this.body.slice(5) ) ) as data
 	}
 }
 
