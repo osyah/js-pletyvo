@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"target": "ESNext",
+		"lib": ["ESNext", "DOM"],
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"preserveConstEnums": false,
+		"outDir": "./dist",
+	}
+}
