@@ -5,7 +5,7 @@ Universal, typed and tree-shakable JavaScript client for [the Pletyvo decentrali
 ## Install
 
 ```sh
-pnpm add js-pletyvo
+pnpm add pletyvo
 ```
 
 ## Pletyvo
@@ -13,7 +13,7 @@ pnpm add js-pletyvo
 `Pletyvo` class is the entry point for interacting with all Pletyvo protocols:
 
 ```ts
-import {Pletyvo} from 'js-pletyvo'
+import {Pletyvo} from 'pletyvo'
 
 const pletyvo = new Pletyvo( {
 	// configuration options
@@ -31,7 +31,9 @@ Configuration options are the following:
 A signer is an object that makes it possible for Pletyvo to identify you. Without passing `signer` option to the client you won't be able to perform actions that require authentication, such as creating events.
 
 ```ts
-declare const signer: DappAuthSigner
+import {DappAuthSigner, DappAuthAddressCreate, Pletyvo, DappEventCreate} from 'pletyvo'
+
+declare const signer: DappAuthSigner 
 
 DappAuthAddressCreate(signer) // returns your address
 
@@ -46,6 +48,8 @@ DappEventCreate(client, 0, 0, 0, 0, 'Hello, world!') // won't throw "Missing sig
 Currently, the library includes only one implementation of `DappAuthSigner`, `DappAuthEd25519`, which uses [`@noble/ed25519`](https://github.com/paulmillr/noble-ed25519) under the hood.
 
 ```ts
+import {DappAuthEd25519} from 'pletyvo'
+
 const signer = new DappAuthEd25519(yourPrivateKey)
 ```
 
