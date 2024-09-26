@@ -20,10 +20,10 @@ export const enum DappAuthSchema {
 	ed25519 = 0x0,
 }
 
-export function DappAuthAddressCreate(signer: DappAuthSigner) {
-	return blake3( signer.schema().toString(16).padStart(2, '0') + signer.public() )
+export function DappAuthAddressFrom(schema: DappAuthSchema, publicKey: string) {
+	return blake3( schema.toString(16).padStart(2, '0') + publicKey )
 }
 
-export function DappAuthAddressString(address: Uint8Array) {
+export function DappAuthAddressToString(address: Uint8Array) {
 	return '0x' + bytesToHex(address)
 }
