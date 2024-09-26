@@ -33,6 +33,14 @@ export async function DeliveryMessageList(p: Pletyvo, channel: string, query?: P
 	return await p.get<DeliveryMessage[]>(`/delivery/v1/channels/${channel}/messages`, query)
 }
 
-export async function DeliveryMessageGet(p: Pletyvo, channel: string, id: string) {
-	return await p.get<DeliveryMessage>(`/delivery/v1/channels/${channel}/messages/${id}`)
+export async function DeliveryMessageGet( p: Pletyvo, input: {channel: string, id: string} ) {
+	return await p.get<DeliveryMessage>(`/delivery/v1/channels/${input.channel}/messages/${input.id}`)
+}
+
+export async function DeliveryMessageCreate(p: Pletyvo, input: {channel: string, content: string} ) {
+	return await DappEventCreate(p, 0, 2, 0, 2, input)
+}
+
+export async function DeliveryMessageUpdate( p: Pletyvo, input: {channel: string, message: string, content: string} ) {
+	return await DappEventCreate(p, 1, 2, 0, 2, input)
 }
