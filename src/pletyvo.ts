@@ -21,7 +21,7 @@ export class Pletyvo {
 	}
 
 	post<data>(endpoint: string, body: unknown) {
-		return this.request<data>('get', endpoint, body, undefined)
+		return this.request<data>('post', endpoint, body, undefined)
 	}
 
 	async request<data>(method: 'get' | 'post', endpoint: string, body: unknown, query: PletyvoQuery = {}) {
@@ -49,8 +49,8 @@ export class Pletyvo {
 		const signer = this.signer()
 		return {
 			sch: signer.schema(),
-			pub: bytesToHex( signer.public() ),
-			sig: bytesToHex( signer.sign(msg) ),
+			pub: btoa( bytesToHex( signer.public() ) ),
+			sig: btoa( bytesToHex( signer.sign(msg) ) ),
 		}
 	}
 
