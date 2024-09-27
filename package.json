@@ -1,6 +1,6 @@
 {
 	"name": "pletyvo",
-	"version": "0.0.1-6",
+	"version": "0.0.1-7",
 	"type": "module",
 	"types": "./src/index.ts",
 	"module": "./dist/index.js",
@@ -11,6 +11,10 @@
 			"types": "./src/index.ts"
 		}
 	},
+	"files": [
+		"./src",
+		"./dist"
+	],
 	"scripts": {
 		"build": "rm -rf dist; tsc"
 	},
