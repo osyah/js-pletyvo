@@ -25,8 +25,9 @@ export class Pletyvo {
 	}
 
 	async request<data>(method: 'get' | 'post', endpoint: string, body: unknown, query: PletyvoQuery = {}) {
-		const headers = new Headers
+		const headers = new Headers()
 		const network = this.network()
+		method === 'post' && headers.set('content-type', 'json')
 		network && headers.set('Network', network)
 
 		const response = await fetch( String(this.urlBase() ?? '').replace(/\/$/, '') + endpoint + '?' + new URLSearchParams(query as any), {
