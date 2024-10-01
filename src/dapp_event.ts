@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Osyah
 // SPDX-License-Identifier: MIT
 
+import {base64} from '@scure/base'
 import {Pletyvo as Pletyvo, PletyvoQuery} from './pletyvo.js'
 import {DappAuthHeader} from './dapp_auth.js'
 import {BytesFromString, BytesToString} from './bytes.js'
@@ -18,7 +19,7 @@ export class DappEvent<data = unknown> {
 		e.id = raw.id
 		e.author = raw.author
 		e.auth = raw.auth
-		e.body = BytesFromString( atob( raw.body ) )
+		e.body = base64.decode(raw.body)
 		return e
 	}
 
@@ -54,10 +55,11 @@ export async function DappEventList(p: Pletyvo, query?: PletyvoQuery) {
 }
 
 export async function DappEventCreate<data>(p: Pletyvo, event: number, aggregate: number, version: number, protocol: number, data: data) {
-	const body = btoa( String.fromCharCode(0, event, aggregate, version, protocol) + JSON.stringify(data) )
+	const bodyText = String.fromCharCode(0, event, aggregate, version, protocol) + JSON.stringify(data)
+	const bodyBytes = BytesFromString(bodyText)
 	return (await p.post< {id: string} >( '/dapp/v1/events', {
-		auth: p.auth( BytesFromString(body) ),
-		body,
+		auth: p.auth(bodyBytes),
+		body: base64.encode(bodyBytes),
 	} ) ).id
 }
 

@@ -1,8 +1,8 @@
 // Copyright (c) 2024 Osyah
 // SPDX-License-Identifier: MIT
 
-import {bytesToHex} from '@noble/hashes/utils'
 import {DappAuthHeader, DappAuthSigner} from './dapp_auth.js'
+import {base64} from '@scure/base'
 
 export interface PletyvoQuery {
 	after?: string
@@ -49,8 +49,8 @@ export class Pletyvo {
 		const signer = this.signer()
 		return {
 			sch: signer.schema(),
-			pub: btoa( bytesToHex( signer.public() ) ),
-			sig: btoa( bytesToHex( signer.sign(msg) ) ),
+			pub: base64.encode( signer.public() ),
+			sig: base64.encode( signer.sign(msg) ),
 		}
 	}
 
