@@ -1,6 +1,6 @@
 {
 	"name": "pletyvo",
-	"version": "0.0.1-8",
+	"version": "0.0.1-9",
 	"type": "module",
 	"types": "./src/index.ts",
 	"module": "./dist/index.js",
@@ -16,7 +16,8 @@
 		"./dist"
 	],
 	"scripts": {
-		"build": "rm -rf dist; tsc"
+		"build": "rm -rf dist; tsc",
+		"prepublish": "pnpm version prerelease; pnpm build"
 	},
 	"dependencies": {
 		"@noble/ed25519": "^2.1.0",
