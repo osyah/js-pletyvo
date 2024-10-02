@@ -16,8 +16,8 @@
 		"./dist"
 	],
 	"scripts": {
-		"build": "rm -rf dist; tsc --project tsconfig.build.json",
-		"prepublish": "pnpm version prerelease; pnpm build"
+		"build": "rm -rf dist && tsc --project tsconfig.build.json",
+		"prepublish": "npm version prerelease && pnpm build"
 	},
 	"dependencies": {
 		"@noble/ed25519": "^2.1.0",
