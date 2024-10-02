@@ -16,7 +16,7 @@
 		"./dist"
 	],
 	"scripts": {
-		"build": "rm -rf dist; tsc",
+		"build": "rm -rf dist; tsc --project tsconfig.build.json",
 		"prepublish": "pnpm version prerelease; pnpm build"
 	},
 	"dependencies": {

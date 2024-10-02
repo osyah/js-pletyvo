@@ -1,8 +1,6 @@
-// Copyright (c) 2024 Osyah
-// SPDX-License-Identifier: MIT
-
-import {DappEventCreate} from './dapp_event.js'
-import {Pletyvo} from './pletyvo.js'
+import {Dapp} from './dapp.js'
+import {PletyvoClient} from './pletyvo_client.js'
+import {PletyvoProtocol} from './pletyvo_protocol.js'
 
 export interface RegistryNetwork {
 	id: string
@@ -10,14 +8,19 @@ export interface RegistryNetwork {
 	name: string
 }
 
-export async function RegistryNetworkGet(p: Pletyvo) {
-	return await p.get(`/registry/v1/network`) as RegistryNetwork
-}
+export class Registry implements PletyvoProtocol {
+	name = 'registry' as const
+	client!: PletyvoClient
 
-export async function RegistryNetworkCreate( p: Pletyvo, input: {name: string} ) {
-	return await DappEventCreate(p, 0, 1, 0, 1, input)
-}
+	async network(id: string) {
+		return await this.client.get<RegistryNetwork>(`/registry/v1/network/${id}`)
+	}
 
-export async function RegistryNetworkUpdate( p: Pletyvo, input: {name: string} ) {
-	return await DappEventCreate(p, 1, 1, 0, 1, input)
+	async networkCreate( input: {name: string} ) {
+		return await this.client.protocol(Dapp).eventCreate(0, 1, 0, 1, input)
+	}
+
+	async networkUpdate( input: {name: string} ) {
+		return await this.client.protocol(Dapp).eventCreate(0, 1, 0, 1, input)
+	}
 }
