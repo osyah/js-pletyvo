@@ -1,7 +1,7 @@
 import {Dapp, DappSignerEd25519, PletyvoClient, Delivery} from './src/index.js'
 
 const client = new PletyvoClient( {
-	gateway: 'http://129.159.249.64/api',
+	gateway: 'http://testnet.pletyvo.osyah.com/api',
 	network: '0191e5b0-b730-7167-965a-083f5b759c32',
 } )
 
