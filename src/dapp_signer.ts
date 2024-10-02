@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {DappAuthSchema} from './dapp_auth.js'
 
 export interface DappSigner {

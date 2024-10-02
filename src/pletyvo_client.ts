@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {PletyvoProtocol} from './pletyvo_protocol.js'
 import {PletyvoQuery} from './pletyvo_query.js'
 

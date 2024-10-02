@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {DappAuthSchema} from './dapp_auth.js'
 import {blake3} from '@noble/hashes/blake3'
 import {bytesToHex} from '@noble/hashes/utils'

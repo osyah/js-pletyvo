@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {base64} from '@scure/base'
 import {DappAuthHeader} from './dapp_auth.js'
 import {PletyvoClient} from './pletyvo_client.js'

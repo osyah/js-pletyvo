@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 export interface DappAuthHeader {
 	sch: DappAuthSchema
 	pub: string

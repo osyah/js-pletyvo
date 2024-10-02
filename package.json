@@ -1,6 +1,7 @@
 {
 	"name": "pletyvo",
 	"version": "0.0.1-12",
+	"license": "MIT",
 	"type": "module",
 	"types": "./src/index.ts",
 	"module": "./dist/index.js",

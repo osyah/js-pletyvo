@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 export * from './bytes.js'
 export * from './dapp.js'
 export * from './dapp_address.js'

@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {Dapp} from './dapp.js'
 import {PletyvoClient} from './pletyvo_client.js'
 import {PletyvoProtocol} from './pletyvo_protocol.js'

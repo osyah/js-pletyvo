@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {BytesToString} from './bytes.js'
 import {DappAuthHeader} from './dapp_auth.js'
 

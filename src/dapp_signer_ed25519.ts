@@ -1,3 +1,6 @@
+// Copyright (c) 2024 Osyah
+// SPDX-License-Identifier: MIT
+
 import {etc, getPublicKey, sign, utils} from '@noble/ed25519'
 import {sha512} from '@noble/hashes/sha512'
 import {DappAuthSchema} from './dapp_auth.js'
