@@ -15,8 +15,8 @@ export class Registry implements PletyvoProtocol {
 	name = 'registry' as const
 	client!: PletyvoClient
 
-	async network(id: string) {
-		return await this.client.get<RegistryNetwork>(`/registry/v1/network/${id}`)
+	async network() {
+		return await this.client.get<RegistryNetwork>('/registry/v1/network')
 	}
 
 	async networkCreate( input: {name: string} ) {

@@ -53,7 +53,7 @@ export class PletyvoClient {
 		this.network && headers.set('Network', this.network)
 
 		const queryString = query ? ( '?' + new URLSearchParams(query as any) ) : ''
-		const response = await this.fetch( (this.gateway ?? '').replace(/\/$/, '') + endpoint + queryString, {
+		const response = await this.fetch.call( globalThis, (this.gateway ?? '').replace(/\/$/, '') + endpoint + queryString, {
 			method,
 			body: body === undefined ? undefined : JSON.stringify(body),
 			headers,
