@@ -1,31 +1,22 @@
 {
 	"name": "pletyvo",
-	"version": "0.0.1-14",
+	"version": "0.1.0",
+	"description": "A JavaScript client for the Pletyvo platform",
+	"repository": "https://github.com/osyah/js-pletyvo.git",
 	"license": "MIT",
 	"type": "module",
-	"types": "./src/index.ts",
-	"module": "./dist/index.js",
 	"main": "./dist/index.js",
-	"exports": {
-		".": {
-			"import": "./dist/index.js",
-			"types": "./src/index.ts"
-		}
-	},
-	"files": [
-		"./src",
-		"./dist"
-	],
+	"types": "./src/index.ts",
 	"scripts": {
-		"build": "rm -rf dist && tsc --project tsconfig.build.json",
-		"prepublish": "npm version prerelease && pnpm build"
+		"build": "rm -rf out; tsc"
+	},
+	"devDependencies": {
+		"@types/node": "^22.13.13",
+		"typescript": "^5.8.2"
 	},
 	"dependencies": {
 		"@noble/ed25519": "^2.1.0",
 		"@noble/hashes": "^1.5.0",
 		"@scure/base": "^1.1.9"
-	},
-	"devDependencies": {
-		"typescript": "^5.6.2"
 	}
 }

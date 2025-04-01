@@ -1,18 +1,16 @@
-**Unstable version. Things may change.**
+# Pletyvo for JavaScript
 
-# `js-pletyvo`
+A universal, typed and tree-shakable JavaScript client for [the Pletyvo decentralized platform](https://pletyvo.osyah.com/).
 
-Universal, typed and tree-shakable JavaScript client for [the Pletyvo decentralized platform](https://pletyvo.osyah.com/).
+## Usage
 
-## Install
+Firstly, install the package:
 
 ```sh
 pnpm add pletyvo
 ```
 
-## Usage
-
-Firstly, you will need a client. A client is an object containing all necessary logic to interact with a Pletyvo gateway. Create one with `PletyvoClient`:
+After that, you will need a client. A client is an object containing all necessary logic to interact with a Pletyvo gateway. Create one with `PletyvoClient`:
 
 ```ts
 const client = new PletyvoClient( {
@@ -23,9 +21,9 @@ const client = new PletyvoClient( {
 
 Valid configuration options are:
 
-- `gateway?: string`
-- `network?: string` – [identifier of network to use](https://pletyvo.osyah.com/reference#network-identify)
-- `fetch?: (url: string, init: RequestInit) => Promise<Response>` – override HTTP client
+- `gateway?`: URL of the gateway to use
+- `network?`: [an identifier of network to use](https://pletyvo.osyah.com/reference#network-identify)
+- `fetch?`: use a custom HTTP client
 
 Protocols are the fundamental concept in Pletyvo. This module represents them as classes with functionality implemented as methods. To use a protocol, you must instantiate it and register it in the client through client's `with` method. The first protocol you'll most likely need is [dApp](#dapp), implemented by `PletyvoDapp` class:
 
