@@ -1,6 +1,6 @@
 {
 	"name": "pletyvo",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "A JavaScript client for the Pletyvo platform",
 	"repository": "https://github.com/osyah/js-pletyvo.git",
 	"license": "MIT",
@@ -17,6 +17,7 @@
 	"dependencies": {
 		"@noble/ed25519": "^2.1.0",
 		"@noble/hashes": "^1.5.0",
+		"@reatom/core": "1000.0.0-alpha.11",
 		"@scure/base": "^1.1.9"
 	}
 }

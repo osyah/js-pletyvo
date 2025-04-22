@@ -2,133 +2,83 @@
 
 A universal, typed and tree-shakable JavaScript client for [the Pletyvo decentralized platform](https://pletyvo.osyah.com/).
 
-## Usage
+## Installation
 
-Firstly, install the package:
+Install the package with your preferred package manager:
 
 ```sh
 pnpm add pletyvo
 ```
 
-After that, you will need a client. A client is an object containing all necessary logic to interact with a Pletyvo gateway. Create one with `PletyvoClient`:
+## Configuration
+
+`Pletyvo` objects store all configuration used by various Pletyvo APIs. Use the eponymous function to define one. There is no fixed set of configuration options, instead, you import the configuration keys symbols manually for granular control over what's included in the bundle.
 
 ```ts
-const client = new PletyvoClient( {
-	gateway: 'http://testnet.pletyvo.osyah.com/api',
-	network: '0191e5b0-b730-7167-965a-083f5b759c32',
+import {Pletyvo, PletyvoHttpGateway} from 'pletyvo'
+
+export const MyPletyvoInstance = Pletyvo( {
+	[PletyvoHttpGateway]: 'http://testnet.pletyvo.osyah.com/api',
 } )
 ```
 
-Valid configuration options are:
-
-- `gateway?`: URL of the gateway to use
-- `network?`: [an identifier of network to use](https://pletyvo.osyah.com/reference#network-identify)
-- `fetch?`: use a custom HTTP client
-
-Protocols are the fundamental concept in Pletyvo. This module represents them as classes with functionality implemented as methods. To use a protocol, you must instantiate it and register it in the client through client's `with` method. The first protocol you'll most likely need is [dApp](#dapp), implemented by `PletyvoDapp` class:
+By default, a `Pletyvo` object must be passed as an argument into all APIs using it, but this can be avoided by setting `PletyvoVariable`, which is an async context variable provided by the [Reatom v1k state manager](https://github.com/reatom/reatom/tree/v1000). If you're not using Reatom, you can simply call `PletyvoVariable.set(pletyvo)` in the module scope to provide a global configuration.
 
 ```ts
-const pletyvo = client.with( [
-	new Dapp(),
-] )
+import {Pletyvo, PletyvoVariable} from 'pletyvo'
+
+export const MyPletyvoInstance = Pletyvo( {
+	// …
+} )
+
+PletyvoVariable.set(MyPletyvoInstance)
 ```
 
-The value returned by `PletyvoClient..with` is a handy object with all registered protocols as fields:
+## HTTP
+
+These are the options for the HTTP layer:
+
+- `[PletyvoHttpGateway]?: string`: the URL of the gateway to call; defaults to the testnet ([[https://testnet.pletyvo.osyah.com/api]])
+- `[PletyvoHttpFetch]?: (url: URL, init: RequestInit) => Promise<Response>`: a `fetch`-like function to use instead of `globalThis.fetch` to make requests
+
+## Query
+
+Functions returning lists of some values typically support a parameter of type `PletyvoQuery`, which is a plain object with the following properties:
+
+- `before?: string`:
+- `after?: string`:
+- `limit: number`: an integer from 0 to 50; defaults to 25
+- `order?: 'asc' | 'desc'`; defaults to `'desc'`
+
+## dApp
 
 ```ts
-await pletyvo.dapp.events() // Array<DappEvent>
-```
+import {DappEventCreate, DappEventVersion} from 'pletyvo'
 
-Some protocols may depend on other protocols. In particular, practically all protocols depend on [dApp](#dapp). To use a dependant protocol or some of its features, you should manually configure and register its dependencies, which are typically listed in protocol's documentation.
+// DappEventGet('')
 
-## Built-in protocols
-
-### dApp
-
-[Platform docs: dApp](https://pletyvo.osyah.com/protocols/dapp)
-
-- creating events with `dapp.eventCreate` requires [configuring authentication](#dapp-cryptography)
-- `dapp.event`/`dapp.events` wrap fetched events in `DappEvent` objects containing methods for accessing event type bytes and parsing their data (not cached!)
-
-```ts
-const createdEventId = await pletyvo.dapp.eventCreate( 0, 2, 0, 2, {
-	content: 'Hello, dApp!',
-	channel: '0191e5b1-6f26-7c0f-b87c-72712e48f42b'
-} ) // string
-
-const detailedEventInfo = await pletyvo.dapp.event(createdEventId) // DappEvent
-detailedEventInfo.data() // "Hello, dApp!"
-detailedEventInfo.event() // 1
-detailedEventInfo.aggregate() // 2
-detailedEventInfo.version() // 3
-detailedEventInfo.protocol() // 4
-
-const twentyPreviousEvents = await pletyvo.dapp.events( {limit: 20, before: detailedEventInfo.id} ) // Array<DappEvent>
-twentyPreviousEvents.length // 20
-```
-
-#### dApp: cryptography
-
-Creating events requires from you to pass `signer` option to `Dapp`, whose value must be an object implementing `DappSigner` interface.
-
-This package includes a signer for the only cryptographic algorithm supported by Pletvyo at the moment, ED25519, implementing it as a thin wrapper around [`@noble/ed25519`](https://github.com/paulmillr/noble-ed25519).
-
-To use the signer, firstly generate a private key through `DappSignerEd25519.randomPrivateKey` (an alias to `@noble/ed25519`-s `utils.randomPrivateKey`) or use the one you already have, then pass it to a new signer instance.
-
-```ts
-const privateKey = DappSignerEd25519.randomPrivateKey()
-const signer = new DappSignerEd25519(privateKey)
-
-const pletyvo = client.with( [
-	new Dapp( {signer} ),
-] )
-
-await pletyvo.dapp.eventCreate( 0, 2, 0, 2, {
-	content: 'Hello, dApp!',
-	channel: '0191e5b1-6f26-7c0f-b87c-72712e48f42b'
+// only works if you're authorized; see "dApp: Auth"
+await DappEventCreate( {
+	version: DappEventVersion.basic,
+	type: 777,
+	data: {hello_to: 'the world'},
 } )
 ```
 
-### Delivery
+## dApp: Auth
 
-[Platform docs: Delivery](https://pletyvo.osyah.com/protocols/dapp)
+For creating events, you must establish your identity by providing a `DappSigner` object through the eponymous option:
 
-### Registry
+- `[DappSigner]?: DappSigner`
 
-[Platform docs: Registry](https://pletyvo.osyah.com/protocols/regitry)
-
-### Advanced: custom protocols
-
-A protocol is a class that implements a simple interface:
+The signer is used, apparently, to sign the payloads using your private key and a supported algorithm. The only such algorithm as of today is ED25519, implemented by `DappSignerEd25519`:
 
 ```ts
-interface PletyvoProtocol {
-	get name(): string
-	set client(next: PletyvoClient)
-}
-```
+import {Pletyvo, DappSigner, DappSignerEd25519} from 'pletyvo'
 
-Start by adding the `name` field and making it `readonly` or adding `as const` to the literal for client's type magic to work, then define `client` field without initializing it (non-null assertion is okay there):
+const myPrivateKey = DappSignerEd25519.randomPrivateKey()
 
-```ts
-class Custom implements Protocol {
-	name = 'custom' as const
-	client!: Client
-}
-```
-
-There you go. Now the protocol is registerable through `Client..with`, so you can start implementing its functionality.
-
-As already stated, every Pletyvo protocol in fact depends on dApp. Besides, depending on other protocols may be helpful to you. To access them, use `Client..protocol` method which acts as a service locator:
-
-```ts
-class Custom implements Protocol {
-	name = 'custom' as const
-	client!: Client
-
-	async doSomething() {
-		const dapp = this.client.protocol(Dapp)
-		return await dapp.eventCreate( 7, 7, 7, 7, {do: 'something'} )
-	}
-}
+const MyPletyvoInstance = Pletyvo( {
+	[DappSigner]: new DappSignerEd25519(myPrivateKey),
+} )
 ```

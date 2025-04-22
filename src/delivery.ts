@@ -1,53 +1,85 @@
-// Copyright (c) 2024 Osyah
-// SPDX-License-Identifier: MIT
-
-import {Dapp} from './dapp.js'
-import {PletyvoClient} from './pletyvo_client.js'
-import {PletyvoProtocol} from './pletyvo_protocol.js'
-import {PletyvoQuery} from './pletyvo_query.js'
+import { DappEventCreate, DappEventVersion } from "./dapp.js"
+import { PletyvoVariable } from "./pletyvo.js"
+import { PletyvoHttpGet } from "./pletyvo_http.js"
+import { PletyvoQuery } from "./pletyvo_query.js"
 
 export interface DeliveryChannel {
 	id: string
-	name: string
+	hash: string
 	author: string
+	name: string
 }
 
-export interface DeliveryMessage {
+export async function DeliveryChannelGet(
+	id: string,
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await PletyvoHttpGet<DeliveryChannel>(`/delivery/v1/channel/${id}`, {}, pletyvo)
+}
+
+export async function DeliveryChannelCreate(
+	data: {name: string},
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await DappEventCreate( {
+		type: 3,
+		data,
+	}, pletyvo )
+}
+
+export async function DeliveryChannelUpdate(
+	channel: string,
+	data: {name: string},
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await DappEventCreate( {
+		type: 4,
+		data,
+	} )
+}
+
+export async function DeliveryPostCreate(
+	channel: string,
+	data: {content: string},
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await DappEventCreate( {
+		type: 5,
+		data: {channel, ...data},
+	}, pletyvo )
+}
+
+export async function DeliveryPostUpdate(
+	channel: string,
+	data: {content: string},
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await DappEventCreate( {
+		type: 5,
+		data: {channel, ...data},
+	}, pletyvo )
+}
+
+export interface DeliveryPost {
 	id: string
-	channel: string
+	hash: string
 	author: string
+	channel: string
 	content: string
 }
 
-export class Delivery implements PletyvoProtocol {
-	name = 'delivery' as const
-	client!: PletyvoClient
+export async function DeliveryPostGet(
+	channel: string,
+	id: string,
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await PletyvoHttpGet<DeliveryPost>(`/delivery/v1/channel/${channel}`, {}, pletyvo)
+}
 
-	async channel(id: string) {
-		return this.client.get<DeliveryChannel>(`/delivery/v1/channels/${id}`)
-	}
-
-	async channelCreate( input: {name: string} ) {
-		return await this.client.protocol(Dapp).eventCreate(0, 1, 0, 2, input)
-	}
-
-	async channelUpdate( input: {name: string} ) {
-		return await this.client.protocol(Dapp).eventCreate(1, 1, 0, 2, input)
-	}
-
-	async messages(channel: string, query?: PletyvoQuery) {
-		return await this.client.get<DeliveryMessage[]>(`/delivery/v1/channels/${channel}/messages`, query)
-	}
-
-	async message( input: {channel: string, id: string} ) {
-		return await this.client.get<DeliveryMessage>(`/delivery/v1/channels/${input.channel}/messages/${input.id}`)
-	}
-
-	async messageCreate(input: {channel: string, content: string} ) {
-		return await this.client.protocol(Dapp).eventCreate(0, 2, 0, 2, input)
-	}
-
-	async messageUpdate( input: {channel: string, message: string, content: string} ) {
-		return await this.client.protocol(Dapp).eventCreate(1, 2, 0, 2, input)
-	}
+export async function DeliveryPostList(
+	channel: string,
+	query: PletyvoQuery = {},
+	pletyvo = PletyvoVariable.get(),
+) {
+	return await PletyvoHttpGet<DeliveryPost[]>(`/delivery/v1/channel/${channel}`, query, pletyvo)
 }

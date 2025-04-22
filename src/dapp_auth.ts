@@ -8,5 +8,5 @@ export interface DappAuthHeader {
 }
 
 export const enum DappAuthSchema {
-	ed25519 = 0x0
+	ed25519 = 1
 }
