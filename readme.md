@@ -52,12 +52,28 @@ Functions returning lists of some values typically support a parameter of type `
 
 ## dApp
 
+These are the functions for working with the dApp protocol:
+
+- `DappEventGet(id: string, pletyvo?: Pletyvo)`: fetches an event by its ID
+- `DappEventList(query?: PletyvoQuery, pletyvo?: Pletyvo)`: fetches multiple events
+- `DappEventCreate(config: DappEventCreateConfig, pletyvo?: Pletyvo)`: creates an event; [only works if you're authorized](#dapp-signer)
+
+Event creation options are the following:
+
+- `data: unknown`
+- `type: number`
+- `version?: DappEventVersion`: the version of the event; defaults to `basic`
+	- when set to `DappEventVersion.linked`:
+		- `parent: string`: parent event ID
+
 ```ts
-import {DappEventCreate, DappEventVersion} from 'pletyvo'
+import {DappEventGet, DappEventList, DappEventCreate, DappEventVersion} from 'pletyvo'
 
-// DappEventGet('')
+const someEvents = await DappEventList()
+const moreEvents = await DappEventList( {after: someEvents.at(-1)!.id} )
 
-// only works if you're authorized; see "dApp: Auth"
+const someSpecificEvent = await DappEventGet('xxx')
+
 await DappEventCreate( {
 	version: DappEventVersion.basic,
 	type: 777,
@@ -65,7 +81,7 @@ await DappEventCreate( {
 } )
 ```
 
-## dApp: Auth
+## dApp: Signer
 
 For creating events, you must establish your identity by providing a `DappSigner` object through the eponymous option:
 
@@ -82,3 +98,19 @@ const MyPletyvoInstance = Pletyvo( {
 	[DappSigner]: new DappSignerEd25519(myPrivateKey),
 } )
 ```
+
+## Delivery
+
+These are the functions for working with the Delivery protocol:
+
+- `DeliveryChannelGet`
+- `DeliveryChannelCreate`
+- `DeliveryChannelUpdate`
+- `DeliveryPostGet`
+- `DeliveryPostList`
+- `DeliveryPostCreate`
+- `DeliveryPostUpdate`
+- `DeliveryMessageGet`
+- `DeliveryMessageList`
+- `DeliveryMessageSend`
+- `DeliveryMessageCreate`

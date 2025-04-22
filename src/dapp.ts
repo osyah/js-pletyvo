@@ -9,7 +9,7 @@ import { PletyvoQuery } from "./pletyvo_query.js"
 import { BytesFromString, BytesToString } from "./bytes.js"
 import { DappSigner } from "./dapp_signer.js"
 
-export type DappEventCreateInput =
+export type DappEventCreateConfig =
 	& {
 		type: number
 		data: unknown
@@ -21,22 +21,22 @@ export type DappEventCreateInput =
 	)
 
 export async function DappEventCreate(
-	input: DappEventCreateInput,
+	config: DappEventCreateConfig,
 	pletyvo = PletyvoVariable.get(),
 ) {
 	const signer = pletyvo[DappSigner]
 	if(!signer) throw new Error('Signer missing')
 
 	const metaString = String.fromCharCode(
-		input.version ?? DappEventVersion.basic,
+		config.version ?? DappEventVersion.basic,
 		DappEventDataType.json, // input.dataType ?? DappEventDataType.json,
-		input.type >> 8,
-		input.type & 8,
+		config.type >> 8,
+		config.type & 8,
 	)
-	const data = BytesFromString( JSON.stringify(input.data) )
+	const data = BytesFromString( JSON.stringify(config.data) )
 	const bodyString =
 		metaString +
-		(input.version === DappEventVersion.linked ? input.parent : '') +
+		(config.version === DappEventVersion.linked ? config.parent : '') +
 		base64.encode(data)
 	const body = base64.encode( BytesFromString(bodyString) )
 	const auth: DappAuthHeader = {
